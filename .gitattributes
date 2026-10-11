@@ -1,2 +1,16 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# Force GitHub to count all files and show all languages
+* linguist-vendored=false
+* linguist-documentation=false
+* linguist-generated=false
+
+# Explicitly define languages so GitHub detects them correctly
+*.html linguist-language=HTML
+*.py linguist-language=Python
+*.bat linguist-language=Batchfile
+
+# Treat model weights as binary so they don't break stats
+*.pt binary
+*.onnx binary
+
+# Ignore Python cache from stats (it's auto-generated garbage)
+__pycache__/* linguist-generated=true
