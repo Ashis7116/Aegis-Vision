@@ -231,19 +231,22 @@ a:focus-visible,button:focus-visible,label:focus-visible{outline:2px solid var(-
 .tg-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
 .telegram-status[data-active=true]{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 50%,transparent);background:color-mix(in srgb,var(--ok) 10%,transparent)}
 .telegram-status[data-active=true] .tg-dot{animation:pulse 1.4s infinite}
-.telegram-form{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.tg-field{display:flex;flex-direction:column;gap:7px}
+.telegram-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.tg-field{display:flex;flex-direction:column;gap:7px;min-width:0}
 .tg-label{font-size:13px;color:var(--mute)}
-.tg-input{padding:12px 16px;font:400 13px var(--f);color:var(--ink);background:var(--g1);border:1px solid var(--ln);border-radius:var(--r2);transition:.2s}
+.tg-input{width:100%;min-width:0;padding:12px 16px;font:400 13px var(--f);color:var(--ink);background:var(--g1);border:1px solid var(--ln);border-radius:var(--r2);transition:.2s}
 .tg-actions{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.telegram-form .tg-actions .tg-btn{flex:1 1 auto}
 .tg-btn{padding:11px 20px;font:600 13px var(--f);color:var(--ink2);cursor:pointer;background:var(--g1);border:1px solid var(--ln2);border-radius:999px;transition:.2s}
 .tg-btn:hover:not(:disabled){color:var(--ink);background:var(--g2)}
 .tg-btn:disabled{opacity:.4;cursor:not-allowed}
 .tg-btn-save,.tg-btn-save:hover:not(:disabled){color:#fff;background:#229ed9;border-color:transparent;box-shadow:0 10px 26px -10px rgba(34,158,217,.7)}
-.tg-result{font-size:12px;color:var(--mute)}
+.tg-result{font-size:12px;color:var(--mute);overflow-wrap:anywhere}
+.tg-actions .tg-result:empty{position:absolute}
+.tg-actions .tg-result:not(:empty){flex:1 1 100%;min-width:0}
 .tg-result.ok{color:var(--ok)}
 .tg-result.err{color:var(--danger)}
-.tg-help{grid-column:1/-1;padding:16px 20px;font-size:12.5px;line-height:1.75;color:var(--mute);background:var(--g1);border:1px solid var(--ln);border-radius:var(--r2)}
+.tg-help{grid-column:1/-1;overflow-wrap:anywhere;padding:16px 20px;font-size:12.5px;line-height:1.75;color:var(--mute);background:var(--g1);border:1px solid var(--ln);border-radius:var(--r2)}
 .tg-help strong{color:var(--ink2)}
 .tg-help code{padding:2px 6px;font:500 11.5px var(--f);background:var(--g2);border-radius:6px}
 .footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:16px 26px;font-size:12.5px;color:var(--mute);border-radius:999px}
@@ -264,7 +267,7 @@ a:focus-visible,button:focus-visible,label:focus-visible{outline:2px solid var(-
 .em-btn.ghost{background:none}
 @media(min-width:981px){.bottom-grid{position:sticky;top:90px}}
 @media(max-width:980px){.dashboard-left{grid-template-columns:1fr}.hero,.about{grid-template-columns:1fr;gap:28px;padding:32px 24px}.feature-grid,.compliance-grid{grid-template-columns:repeat(2,1fr)}.feature-card:nth-child(odd){border-left:0}.feature-card:nth-child(n+3){border-top:1px solid var(--ln)}}
-@media(max-width:700px){.topbar,.footer{border-radius:26px}.fire-grid,.telegram-form,.feature-grid,.compliance-grid,.compliance-summary{grid-template-columns:1fr}.feature-card{border-left:0}.feature-card:nth-child(n+2){border-top:1px solid var(--ln)}.compliance-stats{grid-template-columns:1fr 1fr}.zone-field{width:100%;margin-left:0}.zone-field input{flex:1;width:auto}.emergency-inner{flex-direction:column;align-items:flex-start}.emergency-actions{width:100%}.em-btn{flex:1}.hero-stats{flex-wrap:wrap;gap:16px}.compliance-panel,.fire-panel,.telegram-panel{padding:22px}.card-big{font-size:36px}}
+@media(max-width:700px){.topbar,.footer{border-radius:26px}.telegram-form{grid-template-columns:minmax(0,1fr)}.fire-grid,.feature-grid,.compliance-grid,.compliance-summary{grid-template-columns:1fr}.feature-card{border-left:0}.feature-card:nth-child(n+2){border-top:1px solid var(--ln)}.compliance-stats{grid-template-columns:1fr 1fr}.zone-field{width:100%;margin-left:0}.zone-field input{flex:1;width:auto}.emergency-inner{flex-direction:column;align-items:flex-start}.emergency-actions{width:100%}.em-btn{flex:1}.hero-stats{flex-wrap:wrap;gap:16px}.compliance-panel,.fire-panel,.telegram-panel{padding:22px}.card-big{font-size:36px}}
 @media(prefers-reduced-motion:reduce){*,::before,::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 
 .icon-btn{position:relative}
@@ -279,12 +282,13 @@ a:focus-visible,button:focus-visible,label:focus-visible{outline:2px solid var(-
 .hud i{width:1px;height:14px;background:var(--ln2)}
 :root:has(#emergencyBanner[data-on=true]) .hud{display:none}
 .scrim{position:fixed;inset:0;z-index:80;background:rgba(2,4,8,.5);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .3s}
-.drawer{position:fixed;top:12px;right:12px;bottom:12px;z-index:90;width:min(460px,calc(100% - 24px));display:flex;flex-direction:column;visibility:hidden;translate:calc(100% + 24px) 0;transition:translate .4s cubic-bezier(.2,.8,.2,1),visibility 0s .4s;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(36px) saturate(170%);-webkit-backdrop-filter:blur(36px) saturate(170%);border:1px solid var(--ln2);border-radius:var(--r);box-shadow:var(--shl)}
+.drawer{position:fixed;top:12px;right:12px;bottom:12px;z-index:90;overflow:hidden;width:min(460px,calc(100% - 24px));display:flex;flex-direction:column;visibility:hidden;translate:calc(100% + 24px) 0;transition:translate .4s cubic-bezier(.2,.8,.2,1),visibility 0s .4s;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(36px) saturate(170%);-webkit-backdrop-filter:blur(36px) saturate(170%);border:1px solid var(--ln2);border-radius:var(--r);box-shadow:var(--shl)}
 html[data-drawer=settings] #settingsDrawer,html[data-drawer=camera] #camDrawer{visibility:visible;translate:0 0;transition:translate .4s cubic-bezier(.2,.8,.2,1),visibility 0s}
 html[data-drawer=settings] .scrim,html[data-drawer=camera] .scrim{opacity:1;pointer-events:auto}
-.drawer-head{display:flex;align-items:center;justify-content:space-between;padding:22px 24px 8px}
+.drawer-head{flex:none;display:flex;align-items:center;justify-content:space-between;padding:22px 24px 8px;overflow:hidden;scrollbar-gutter:stable;scrollbar-width:thin}
+.drawer .icon-btn{transition:.2s,visibility 0s}
 .drawer-head h2{font-size:20px}
-.drawer-body{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:28px;padding:12px 24px 24px;scrollbar-width:thin}
+.drawer-body{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-gutter:stable;display:flex;flex-direction:column;gap:28px;padding:12px 24px 24px;scrollbar-width:thin}
 .opt-group h3{margin:0 0 6px;font:500 14px var(--f);color:var(--ink2)}
 .opt{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid var(--ln);font-size:14px;cursor:pointer}
 .opt small{display:block;font-size:12px;color:var(--mute)}
@@ -295,7 +299,7 @@ html[data-drawer=settings] .scrim,html[data-drawer=camera] .scrim{opacity:1;poin
 .drawer .telegram-section{margin:0}
 .drawer .sec-title{margin:0 0 14px;font-size:14px;color:var(--ink2)}
 .drawer .telegram-panel{padding:0;background:none;border:0;border-radius:0;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
-.drawer .telegram-form{grid-template-columns:1fr}
+.drawer .telegram-form{grid-template-columns:minmax(0,1fr)}
 .drawer .telegram-head{margin-bottom:14px}
 .drawer .telegram-title{font-size:16px}
 html[data-kiosk=true] :is(.hero,.features,.about,.footer){display:none}
@@ -305,7 +309,9 @@ html[data-lite=true] .space{display:none}
 html[data-lite=true] [data-tilt]{transform:none}
 @media(max-width:700px){#hudPeople,#hudViol,.hud i:nth-of-type(n+2){display:none}.hud{left:12px;bottom:12px}}
 
-.tg-row{grid-column:1/-1;display:grid;grid-template-columns:2fr 1fr;gap:12px}
+.tg-row{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px}
+.tg-row>.tg-field{flex:1 1 90px}
+.tg-row>.tg-field:first-child{flex:2 1 180px}
 .wa .tg-btn-save,.wa .tg-btn-save:hover:not(:disabled){background:#1fa855;box-shadow:0 10px 26px -10px rgba(31,168,85,.7)}
 .icon-btn[data-tg=err]::after{background:var(--danger);animation:pulse 1.2s infinite}
 
@@ -372,8 +378,9 @@ html[data-lite=true] [data-tilt]{transform:none}
 .cam-tab[data-state=alert] .cam-dot,.cam-tab[aria-selected=true][data-state=alert] .cam-dot{background:var(--danger);animation:pulse .8s infinite}
 .cam-tab[aria-selected=true][data-state=warn] .cam-dot,.cam-tab[aria-selected=true][data-state=offline] .cam-dot{background:var(--amber)}
 .cam-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
-.cam-row{display:grid;grid-template-columns:auto 1fr auto auto auto;gap:10px;align-items:center;padding:10px 12px;background:var(--g1);border:1px solid var(--ln);border-radius:var(--r2);cursor:pointer}
+.cam-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto auto;gap:10px;align-items:center;padding:10px 12px;background:var(--g1);border:1px solid var(--ln);border-radius:var(--r2);cursor:pointer}
 .cam-row[data-focus=true]{border-color:var(--accent)}
+.cam-row-main{min-width:0;overflow-wrap:anywhere}
 .cam-row-main b{display:block;font-size:14px;font-weight:500}
 .cam-row-main small{display:block;font-size:12px;color:var(--mute)}
 .cam-kind{font-size:12px;color:var(--mute)}
@@ -859,7 +866,7 @@ html[data-lite=true] [data-tilt]{transform:none}
           <div class="tg-actions">
             <button type="button" class="tg-btn tg-btn-save" id="waSaveBtn">💾 Save configuration</button>
             <button type="button" class="tg-btn tg-btn-test" id="waTestBtn" disabled>📨 Send test message</button>
-            <span class="tg-result" id="waResult"></span>
+            <span class="tg-result" id="waResult" role="status" aria-live="polite"></span>
           </div>
           <div class="tg-help">
             <strong>How to set up:</strong><br>
@@ -902,7 +909,7 @@ html[data-lite=true] [data-tilt]{transform:none}
           <div class="tg-actions">
             <button type="button" class="tg-btn tg-btn-save" id="tgSaveBtn">💾 Save configuration</button>
             <button type="button" class="tg-btn tg-btn-test" id="tgTestBtn" disabled>📨 Send test message</button>
-            <span class="tg-result" id="tgResult"></span>
+            <span class="tg-result" id="tgResult" role="status" aria-live="polite"></span>
           </div>
           <div class="tg-help">
             <strong>How to set up:</strong><br>
@@ -1565,7 +1572,7 @@ html[data-lite=true] [data-tilt]{transform:none}
   async function setKiosk(on){root.dataset.kiosk=on?'true':'false';try{if(on&&!document.fullscreenElement)await root.requestFullscreen();if(!on&&document.fullscreenElement)await document.exitFullscreen()}catch(e){}}
   $('kioskBtn').addEventListener('click',()=>setKiosk(root.dataset.kiosk!=='true'));
   document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement)root.dataset.kiosk='false'});
-  const bgEls=[document.querySelector('main'),document.querySelector('.topbar')];
+  const bgEls=[document.querySelector('main'),document.querySelector('.topbar'),hud];
   function setDrawer(name){const on=!!name;if(on&&!opener)opener=document.activeElement;root.dataset.drawer=on?name:'false';bgEls.forEach(el=>{el.inert=on});$('settingsBtn').setAttribute('aria-expanded',String(name==='settings'));if(on)$(name==='camera'?'camClose':'drawerClose').focus();else{(opener&&opener.isConnected?opener:$('settingsBtn')).focus();opener=null}}
   $('settingsBtn').addEventListener('click',()=>setDrawer('settings'));
   $('drawerClose').addEventListener('click',()=>setDrawer(false));
