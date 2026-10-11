@@ -285,10 +285,10 @@ a:focus-visible,button:focus-visible,label:focus-visible{outline:2px solid var(-
 .drawer{position:fixed;top:12px;right:12px;bottom:12px;z-index:90;overflow:hidden;width:min(460px,calc(100% - 24px));display:flex;flex-direction:column;visibility:hidden;translate:calc(100% + 24px) 0;transition:translate .4s cubic-bezier(.2,.8,.2,1),visibility 0s .4s;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(36px) saturate(170%);-webkit-backdrop-filter:blur(36px) saturate(170%);border:1px solid var(--ln2);border-radius:var(--r);box-shadow:var(--shl)}
 html[data-drawer=settings] #settingsDrawer,html[data-drawer=camera] #camDrawer{visibility:visible;translate:0 0;transition:translate .4s cubic-bezier(.2,.8,.2,1),visibility 0s}
 html[data-drawer=settings] .scrim,html[data-drawer=camera] .scrim{opacity:1;pointer-events:auto}
-.drawer-head{flex:none;display:flex;align-items:center;justify-content:space-between;padding:22px 24px 8px;overflow:hidden;scrollbar-gutter:stable;scrollbar-width:thin}
+.drawer-head{flex:none;display:flex;align-items:center;justify-content:space-between;padding:22px calc(24px + var(--sbw,0px)) 8px 24px}
 .drawer .icon-btn{transition:.2s,visibility 0s}
 .drawer-head h2{font-size:20px}
-.drawer-body{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-gutter:stable;display:flex;flex-direction:column;gap:28px;padding:12px 24px 24px;scrollbar-width:thin}
+.drawer-body{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;display:flex;flex-direction:column;gap:28px;padding:12px 24px 24px;scrollbar-width:thin}
 .opt-group h3{margin:0 0 6px;font:500 14px var(--f);color:var(--ink2)}
 .opt{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid var(--ln);font-size:14px;cursor:pointer}
 .opt small{display:block;font-size:12px;color:var(--mute)}
@@ -399,6 +399,9 @@ html[data-lite=true] [data-tilt]{transform:none}
 .src-pick input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
 .dev-row{display:flex;gap:8px}
 .dev-row select{flex:1;min-width:0}
+:root{--menu:#141922}
+:root[data-theme=light]{--menu:#fff}
+select option,select optgroup{background-color:var(--menu);color:var(--ink)}
 .hint{font-size:12px;color:var(--mute)}
 .cam-form[data-src=webcam] :is(.src-file,.src-url),.cam-form[data-src=file] :is(.src-webcam,.src-url),.cam-form[data-src=url] :is(.src-webcam,.src-file){display:none}
 .cam-form .tg-btn-save,.cam-form .tg-btn-save:hover:not(:disabled){background:var(--sel);color:var(--on-sel);box-shadow:none}
@@ -1573,6 +1576,9 @@ html[data-lite=true] [data-tilt]{transform:none}
   $('kioskBtn').addEventListener('click',()=>setKiosk(root.dataset.kiosk!=='true'));
   document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement)root.dataset.kiosk='false'});
   const bgEls=[document.querySelector('main'),document.querySelector('.topbar'),hud];
+  /* keep each drawer header's right edge in line with its scrolling body: reserve exactly the scrollbar width the body currently shows (0 when it fits, or with overlay scrollbars) */
+  const syncGutter=b=>b.closest('.drawer').style.setProperty('--sbw',(b.offsetWidth-b.clientWidth)+'px');
+  if(window.ResizeObserver){const gutterRO=new ResizeObserver(es=>es.forEach(e=>syncGutter(e.target)));document.querySelectorAll('.drawer-body').forEach(b=>{gutterRO.observe(b);syncGutter(b)})}
   function setDrawer(name){const on=!!name;if(on&&!opener)opener=document.activeElement;root.dataset.drawer=on?name:'false';bgEls.forEach(el=>{el.inert=on});$('settingsBtn').setAttribute('aria-expanded',String(name==='settings'));if(on)$(name==='camera'?'camClose':'drawerClose').focus();else{(opener&&opener.isConnected?opener:$('settingsBtn')).focus();opener=null}}
   $('settingsBtn').addEventListener('click',()=>setDrawer('settings'));
   $('drawerClose').addEventListener('click',()=>setDrawer(false));
